@@ -1,0 +1,82 @@
+
+{
+  "Records": [
+    {
+      "eventTime": "2026-10-21T14:00:00Z",
+      "eventSource": "signin.amazonaws.com",
+      "eventName": "ConsoleLogin",
+      "awsRegion": "us-east-1",
+      "sourceIPAddress": "203.0.113.50",
+      "userIdentity": {
+        "type": "IAMUser",
+        "userName": "lab-user"
+      },
+      "responseElements": {
+        "ConsoleLogin": "Failure"
+      }
+    },
+    {
+      "eventTime": "2026-10-21T14:01:00Z",
+      "eventSource": "signin.amazonaws.com",
+      "eventName": "ConsoleLogin",
+      "awsRegion": "us-east-1",
+      "sourceIPAddress": "203.0.113.50",
+      "userIdentity": {
+        "type": "IAMUser",
+        "userName": "lab-user"
+      },
+      "responseElements": {
+        "ConsoleLogin": "Failure"
+      }
+    },
+    {
+      "eventTime": "2026-10-21T14:02:00Z",
+      "eventSource": "signin.amazonaws.com",
+      "eventName": "ConsoleLogin",
+      "awsRegion": "us-east-1",
+      "sourceIPAddress": "203.0.113.50",
+      "userIdentity": {
+        "type": "IAMUser",
+        "userName": "lab-user"
+      },
+      "responseElements": {
+        "ConsoleLogin": "Failure"
+      }
+    },
+    {
+      "eventTime": "2026-10-21T14:03:00Z",
+      "eventSource": "signin.amazonaws.com",
+      "eventName": "ConsoleLogin",
+      "awsRegion": "us-east-1",
+      "sourceIPAddress": "192.0.2.10",
+      "userIdentity": {
+        "type": "IAMUser",
+        "userName": "admin-user"
+      },
+      "responseElements": {
+        "ConsoleLogin": "Success"
+      },
+      "additionalEventData": {
+        "MFAUsed": "Yes"
+      }
+    },
+
+    {
+      "eventTime": "2026-10-21T14:04:00Z",
+      "eventSource": "iam.amazonaws.com",
+      "eventName": "AttachUserPolicy",
+      "awsRegion": "us-east-1",
+      "sourceIPAddress": "192.0.2.44",
+      "userIdentity": {
+        "type": "IAMUser",
+        "userName": "lab-admin",
+        "arn": "arn:aws:iam::111122223333:user/lab-admin"
+      },
+      "requestParameters": {
+        "userName": "lab-user",
+        "policyArn": "arn:aws:iam::aws:policy/AdministratorAccess"
+      },
+      "responseElements": null
+    } 
+  ]
+}
