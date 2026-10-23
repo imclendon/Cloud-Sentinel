@@ -142,7 +142,7 @@ Future development will expand event coverage, improve alert context, and integr
 
 ## Career Focus
 
-This project is designed to demonstrate practical skills relevant to:
+This project is designed to demonstrate my practical skills relevant to starting a career as a:
 
 **SOC Analyst:** Log analysis, threat detection, event correlation, incident triage.
 
