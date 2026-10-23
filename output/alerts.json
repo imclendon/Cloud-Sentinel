@@ -1,0 +1,25 @@
+[
+    {
+        "rule_id": "CS-001",
+        "title": "Multiple Failed AWS Logins",
+        "severity": "MEDIUM",
+        "user": "lab-user",
+        "source_ip": "203.0.113.50",
+        "timestamp": "2026-10-21T14:02:00+00:00",
+        "details": {
+            "failed_attempts": 3,
+            "first_seen": "2026-10-21T14:00:00+00:00"
+        }
+    },
+    {
+        "rule_id": "CS-002",
+        "title": "AdministratorAccess Policy Attached",
+        "severity": "HIGH",
+        "user": "lab-user",
+        "source_ip": "192.0.2.44",
+        "timestamp": "2026-10-21T14:04:00Z",
+        "details": {
+            "actor": "arn:aws:iam::111122223333:user/lab-admin"
+        }
+    }
+]
