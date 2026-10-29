@@ -1,67 +1,109 @@
 # Cloud Sentinel
-### AWS Threat Detection, Security Monitoring & Compliance Automation
 
-Cloud Sentinel is a Python-based cloud security project designed to simulate real-world Security Operations Center (SOC) workflows within an AWS environment.
+### AWS Threat Detection, Alert Correlation & Incident Response Automation
 
-The project focuses on detecting suspicious cloud activity, analyzing AWS CloudTrail events, automating security investigations, and eventually evaluating cloud configurations against industry security frameworks.
+Cloud Sentinel is a Python-based cybersecurity project designed to simulate real-world Security Operations Center (SOC) workflows using AWS CloudTrail event data.
 
-**Project Status:** Active Development — Phase 1: Threat Detection
+The project automates suspicious activity detection, security alert correlation, incident reporting, and preliminary investigation workflows. It is being developed as a hands-on cloud security portfolio project, with future expansion into AWS infrastructure security and GRC compliance assessments.
+
+**Project Status:** Active Development | Local Security Monitoring & Incident Response
 
 ## Project Objectives
 
-- Develop automated threat detection rules for AWS CloudTrail events.
-- Identify suspicious authentication attempts and IAM privilege changes.
-- Reduce false positives through event correlation and automated testing.
-- Generate structured security alerts and incident investigation reports.
-- Deploy and secure AWS infrastructure using Terraform.
-- Evaluate cloud security controls using NIST CSF 2.0 and CIS benchmarks.
+- Detect suspicious authentication and IAM activity within AWS CloudTrail logs.
+- Correlate security events using account identifiers and event timestamps.
+- Generate structured alerts with severity classifications.
+- Automate incident reports with evidence and investigation checklists.
+- Map security findings to MITRE ATT&CK techniques.
+- Expand into AWS infrastructure monitoring, security assessments, and compliance reporting.
 
 ## Current Features
 
-### 1. Suspicious Login Detection
-**File:** `detections/cloudtrail_detector.py`
+### 1. AWS CloudTrail Threat Detection
 
-Analyzes simulated AWS CloudTrail authentication events to identify potentially suspicious login activity.
+**Detection Rule CS-001 — Suspicious Login Activity**
 
-**Detection Logic:**
-- Filters AWS `ConsoleLogin` events for failed authentication attempts.
-- Groups events by username and source IP address.
-- Uses a five-minute sliding time window to correlate events.
-- Generates a security alert when three or more failed attempts occur within the configured window.
+- Analyzes CloudTrail `ConsoleLogin` events.
+- Detects three or more failed login attempts within a five-minute window.
+- Groups activity by username and source IP address.
+- Generates a MEDIUM-severity alert for investigation.
 
-### 2. IAM Privilege Change Detection
-**File:** `detections/iam_detector.py`
+**Detection Rule CS-002 — IAM Privilege Changes**
 
-Monitors simulated AWS IAM activity for administrator policy attachments that could indicate unauthorized privilege changes.
+- Monitors `AttachUserPolicy` events.
+- Identifies attachments of the AWS-managed `AdministratorAccess` policy.
+- Extracts the actor, target user, IP address, and event timestamp.
+- Generates a HIGH-severity alert when the specified privilege change is detected.
 
-**Detection Logic:**
-- Identifies `AttachUserPolicy` events.
-- Detects attachments of the AWS-managed `AdministratorAccess` policy.
-- Excludes API requests reporting an error.
-- Extracts the actor, target user, source IP, and timestamp.
-- Generates a high-severity alert for analyst investigation.
+### 2. Centralized Security Alert Engine
 
-### 3. Automated Detection Testing
+**File:** `alert_engine.py`
 
-Python's built-in `unittest` framework is used to validate detection behavior.
+- Executes multiple detection rules against simulated CloudTrail events.
+- Normalizes findings into a consistent alert format.
+- Assigns unique detection rule identifiers and severity levels.
+- Exports structured security alerts to `output/alerts.json`.
 
-Verified login detection scenarios include:
-- Three failed logins within the detection window.
-- Fewer than three failed logins.
-- Login attempts outside the detection window.
-- Login attempts originating from different IP addresses.
+### 3. Automated Incident Reporting
+
+**File:** `incident_reporter.py`
+
+- Automatically generates incident reports from detected security alerts.
+- Assigns reproducible incident IDs and initial investigation statuses.
+- Includes relevant evidence, MITRE ATT&CK mappings, and investigation checklists.
+- Produces structured JSON reports and formatted Markdown investigation documents.
+- Displays color-coded severity badges for HIGH, MEDIUM, and LOW levels.
+
+### 4. Security Alert Correlation
+
+**File:** `correlation_engine.py`
+
+- Identifies potentially related security alerts affecting the same account.
+- Correlates failed login activity followed by IAM privilege changes within a configurable ten-minute window.
+- Generates correlation identifiers and records relationships between findings.
+- Exports correlated findings to `output/correlations.json`.
+- Supports consolidated Markdown investigation reports linked from individual incidents.
+
+**Current limitation:** The implemented correlation rule assigns HIGH priority to matching findings. Additional risk-based priority classifications are planned.
+
+### 5. Correlation Priority Demonstration
+
+**File:** `demo_correlation_priorities.py`
+
+A separate demonstration generates HIGH, MEDIUM, and LOW reports to validate Markdown severity badge formatting.
+
+These priorities are illustrative and are not calculated from real security risk.
+
+### 6. Automated Testing
+
+The project uses Python's built-in `unittest` framework.
+
+Current verified coverage includes:
+
+- Failed-login detection thresholds and time windows.
+- IAM policy attachment detection.
+- Failed API requests and non-administrative IAM activity.
+- Correlation matching by target user.
+- Event ordering and correlation time-window boundaries.
+- Reproducible correlation identifiers.
+
+**Current test results:** 14 passing unit tests covering detection and correlation logic.
+
+Dedicated automated tests for the new incident-report integration remain planned.
 
 ## Technologies
 
 | Technology | Purpose |
 |---|---|
-| Python | Security event parsing, correlation, and detection |
-| JSON | CloudTrail event data and security findings |
-| AWS CloudTrail | Cloud activity logging format |
-| Git & GitHub | Version control and project documentation |
-| Terraform | Planned AWS infrastructure provisioning |
-| AWS IAM | Identity and access management analysis |
-| NIST CSF 2.0 / CIS | Planned security assessments and compliance mapping |
+| Python | Security automation and detection logic |
+| JSON | CloudTrail event data and generated findings |
+| AWS CloudTrail | Cloud activity event format |
+| AWS IAM | Identity and privilege-change analysis |
+| MITRE ATT&CK | Security technique classification |
+| Markdown | Incident and investigation reporting |
+| Git & GitHub | Version control and documentation |
+| Terraform | Planned AWS infrastructure deployment |
+| NIST CSF 2.0 / CIS | Planned compliance and risk assessments |
 
 ## Project Structure
 
@@ -74,78 +116,137 @@ cloud-sentinel/
 ├── sample_logs/
 │   └── cloudtrail_events.json
 ├── tests/
-│   └── test_cloudtrail_detector.py
-├── .gitignore
-└── README.md
+│   ├── test_cloudtrail_detector.py
+│   ├── test_iam_detector.py
+│   └── test_correlation_engine.py
+├── alert_engine.py
+├── correlation_engine.py
+├── incident_reporter.py
+├── demo_correlation_priorities.py
+├── README.md
+└── .gitignore
 ```
 
-Additional tests, infrastructure configuration, and incident-response documentation will be added as development progresses.
+Generated reports are stored locally in the `output/` directory, which is excluded from Git tracking.
 
 ## Getting Started
 
-**Requirements:** Python 3 and a terminal.
+### Requirements
 
-1. Open the Cloud Sentinel project directory.
-2. Run the failed-login detector:
+- Python 3
+- Git
+- VS Code or another code editor
+
+The current local detection and reporting tools use the Python standard library and do not require AWS credentials.
+
+### Running Cloud Sentinel
+
+Run the centralized security alert engine:
 
 ```bash
-python3 detections/cloudtrail_detector.py
+python3 alert_engine.py
 ```
 
-3. Run the IAM privilege-change detector:
+Generate individual incident and correlation reports:
 
 ```bash
-python3 detections/iam_detector.py
+python3 incident_reporter.py
 ```
 
-4. Run the automated tests:
+Run the standalone correlation engine:
+
+```bash
+python3 correlation_engine.py
+```
+
+Generate severity badge demonstration reports:
+
+```bash
+python3 demo_correlation_priorities.py
+```
+
+Run automated tests:
 
 ```bash
 python3 -m unittest discover -s tests -v
 ```
 
-The current detection scripts use only the Python standard library and do not require AWS credentials.
+### Generated Reports
 
-## Example Security Alert
+The application generates the following files locally:
 
 ```text
-[HIGH SEVERITY ALERT] AdministratorAccess Attached
-Actor: arn:aws:iam::111122223333:user/lab-admin
-Target user: lab-user
-Source IP: 192.0.2.44
-Timestamp: 2026-10-21T14:04:00Z
-Status: Investigate privilege change
+output/
+├── alerts.json
+├── incidents.json
+├── correlations.json
+├── incident_reports/
+├── correlation_reports/
+└── demo_correlation_reports/
 ```
+
+Markdown reports can be viewed in VS Code using the Markdown preview shortcut: `Command + Shift + V`.
 
 ## Development Roadmap
 
-- [x] Establish local development environment.
-- [x] Implement failed-login detection.
-- [x] Implement IAM administrator policy attachment detection.
-- [x] Validate failed-login detection with automated tests.
-- [ ] Expand IAM detection test coverage.
-- [ ] Integrate detection rules into a centralized alert engine.
-- [ ] Generate JSON security alerts and incident reports.
-- [ ] Configure an AWS test environment and monitoring.
-- [ ] Deploy infrastructure using Terraform.
+### Phase 1 — Security Detection & Incident Response
+
+- [x] Configure local Python development environment.
+- [x] Create simulated AWS CloudTrail logs.
+- [x] Develop failed-login detection.
+- [x] Develop IAM AdministratorAccess detection.
+- [x] Implement centralized security alerts.
+- [x] Generate automated Markdown incident reports.
+- [x] Add MITRE ATT&CK mappings.
+- [x] Implement color-coded severity badges.
+- [x] Develop security alert correlation.
+- [x] Add correlated investigation reports.
+- [x] Demonstrate HIGH, MEDIUM, and LOW report formatting.
+- [x] Validate detection and correlation logic with 14 automated tests.
+- [ ] Add automated tests for incident reporting and report integration.
+- [ ] Publish sanitized sample investigation reports.
+
+### Phase 2 — AWS Cloud Security Infrastructure
+
+- [ ] Configure a secure AWS lab environment.
+- [ ] Implement Terraform infrastructure provisioning.
+- [ ] Analyze real CloudTrail events from an authorized test account.
+- [ ] Expand threat detection coverage.
+- [ ] Introduce additional cloud security monitoring controls.
+
+### Phase 3 — Governance, Risk & Compliance
+
 - [ ] Perform cloud security configuration assessments.
-- [ ] Map security findings to NIST CSF 2.0 and CIS controls.
-- [ ] Produce a final risk assessment and incident-response portfolio.
+- [ ] Map security controls to NIST CSF 2.0 and applicable CIS benchmarks.
+- [ ] Create a security risk register.
+- [ ] Document remediation recommendations.
+- [ ] Produce a final cloud security assessment report.
 
-## Security and Limitations
+### Phase 4 — Portfolio Enhancements
 
-Cloud Sentinel currently operates against **synthetic CloudTrail events** for safe, repeatable testing. It does not perform attacks or modify live AWS resources.
+- [ ] Add architecture diagrams and sanitized screenshots.
+- [ ] Expand automated testing coverage.
+- [ ] Implement CI testing with GitHub Actions.
+- [ ] Finalize project documentation.
 
-Detection rules identify activities that warrant investigation; alerts alone do not establish malicious intent. Current rules cover selected event patterns rather than comprehensive threat detection.
+## Security Considerations
 
-Future development will expand event coverage, improve alert context, and integrate cloud-based security monitoring.
+Cloud Sentinel currently analyzes **simulated AWS CloudTrail events** rather than live production data.
 
-## Career Focus
+- No real attacks or malicious payloads are executed.
+- Detection results indicate activity requiring investigation, not confirmed compromise.
+- Correlation is based on selected event attributes and timing; it does not establish causation.
+- Generated reports are excluded from Git to reduce the risk of exposing future sensitive security data.
+- Actual AWS deployment and compliance auditing are planned future features.
 
-This project is designed to demonstrate my practical skills relevant to starting a career as a:
+## Career Applications
 
-**SOC Analyst:** Log analysis, threat detection, event correlation, incident triage.
+**SOC Analyst:** Threat detection, log analysis, event correlation, incident triage, and investigation documentation.
 
-**Cloud Security Engineer:** AWS IAM monitoring, cloud infrastructure security, automation.
+**Cloud Security Engineer:** AWS IAM security, cloud activity monitoring, security automation, and planned infrastructure-as-code deployment.
 
-**GRC Analyst:** Security control assessment, risk documentation, compliance mapping.
+**GRC Analyst:** Security control documentation, evidence collection, and planned compliance and risk assessments.
+
+---
+
+*Cloud Sentinel is an ongoing cybersecurity portfolio project focused on developing practical security engineering and incident-response skills.*
