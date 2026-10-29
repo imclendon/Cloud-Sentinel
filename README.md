@@ -4,7 +4,7 @@
 
 Cloud Sentinel is a Python-based cybersecurity project designed to simulate real-world Security Operations Center (SOC) workflows using AWS CloudTrail event data.
 
-The project automates suspicious activity detection, security alert correlation, incident reporting, and preliminary investigation workflows. It is being developed as a hands-on cloud security portfolio project, with future expansion into AWS infrastructure security and GRC compliance assessments.
+This project automates suspicious activity detection, security alert correlation, incident reporting, and preliminary investigation workflows. I'm developing it as a hands-on cloud security portfolio project, with future expansion into AWS infrastructure security and GRC compliance assessments.
 
 **Project Status:** Active Development | Local Security Monitoring & Incident Response
 
